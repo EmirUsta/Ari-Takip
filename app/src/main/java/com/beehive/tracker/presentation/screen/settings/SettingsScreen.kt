@@ -39,6 +39,7 @@ fun SettingsScreen(
 ) {
     val tags by viewModel.tags.collectAsStateWithLifecycle()
     val gridPrefs by viewModel.gridPreferences.collectAsStateWithLifecycle()
+    val audioPurgeTtlDays by viewModel.audioPurgeTtlDays.collectAsStateWithLifecycle()
     var showDialog by remember { mutableStateOf(false) }
     var newLabel by remember { mutableStateOf("") }
     var selectedColor by remember { mutableStateOf(PRESET_COLORS.first()) }
@@ -70,6 +71,13 @@ fun SettingsScreen(
                 onColsChange = { viewModel.setCols(it) },
                 onRowsChange = { viewModel.setRows(it) },
                 onGapChange  = { viewModel.setGap(it) },
+            )
+
+            HorizontalDivider()
+
+            AudioPurgeSection(
+                currentDays = audioPurgeTtlDays,
+                onSelect = { viewModel.setAudioPurgeTtlDays(it) },
             )
 
             HorizontalDivider()
@@ -173,6 +181,29 @@ fun SettingsScreen(
     }
 }
 
+private val PURGE_OPTIONS = listOf(0 to "Hiçbir zaman", 7 to "7 gün", 30 to "30 gün", 90 to "90 gün")
+
+@Composable
+private fun AudioPurgeSection(currentDays: Int, onSelect: (Int) -> Unit) {
+    Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+        Text(
+            text = "Sesli Not Otomatik Silme",
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            modifier = Modifier.padding(bottom = 8.dp),
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            PURGE_OPTIONS.forEach { (days, label) ->
+                FilterChip(
+                    selected = currentDays == days,
+                    onClick = { onSelect(days) },
+                    label = { Text(label, style = MaterialTheme.typography.labelMedium) },
+                )
+            }
+        }
+    }
+}
+
 @Composable
 private fun GridSettingsSection(
     prefs: GridPrefs,
@@ -194,7 +225,7 @@ private fun GridSettingsSection(
             onDecrease = { onColsChange(prefs.cols - 1) },
             onIncrease = { onColsChange(prefs.cols + 1) },
             decreaseEnabled = prefs.cols > 2,
-            increaseEnabled = prefs.cols < 20,
+            increaseEnabled = prefs.cols < 50,
         )
         StepRow(
             label = "Satır (B)",

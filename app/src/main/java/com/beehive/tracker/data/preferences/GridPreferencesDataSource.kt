@@ -32,7 +32,7 @@ class GridPreferencesDataSource @Inject constructor(
     }
 
     suspend fun setCols(value: Int) {
-        context.gridDataStore.edit { it[colsKey] = value.coerceIn(2, 20) }
+        context.gridDataStore.edit { it[colsKey] = value.coerceIn(2, 50) }
     }
 
     suspend fun setRows(value: Int) {
