@@ -9,6 +9,7 @@ import com.beehive.tracker.domain.model.Hive
 import com.beehive.tracker.domain.usecase.hive.ArrangeHivesInGridUseCase
 import com.beehive.tracker.domain.usecase.hive.CreateHiveUseCase
 import com.beehive.tracker.domain.usecase.hive.DeleteHiveUseCase
+import com.beehive.tracker.domain.usecase.hive.FindFirstEmptyGridSlotUseCase
 import com.beehive.tracker.domain.usecase.hive.GetHivesByApiaryUseCase
 import com.beehive.tracker.domain.usecase.hive.MoveHiveUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,7 @@ class MapViewModel @Inject constructor(
     private val moveHive: MoveHiveUseCase,
     private val deleteHive: DeleteHiveUseCase,
     private val arrangeInGrid: ArrangeHivesInGridUseCase,
+    private val findFirstEmptySlot: FindFirstEmptyGridSlotUseCase,
     gridPrefsSource: GridPreferencesDataSource,
 ) : ViewModel() {
 
@@ -45,6 +47,9 @@ class MapViewModel @Inject constructor(
     fun toggleEditMode() {
         _isEditMode.value = !_isEditMode.value
     }
+
+    fun firstEmptySlot(cellPx: Float, halfGap: Float): Pair<Float, Float> =
+        findFirstEmptySlot(hives.value, gridPrefs.value.cols, gridPrefs.value.rows, cellPx, halfGap)
 
     fun addHive(name: String, posX: Float, posY: Float) {
         viewModelScope.launch { createHive(apiaryId, name, posX, posY) }

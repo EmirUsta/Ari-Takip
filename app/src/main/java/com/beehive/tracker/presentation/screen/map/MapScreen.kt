@@ -136,7 +136,11 @@ fun MapScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddDialog = true }) {
+            FloatingActionButton(onClick = {
+                val (x, y) = viewModel.firstEmptySlot(cellPx, halfGap)
+                tapOffset = Offset(x, y)
+                showAddDialog = true
+            }) {
                 Icon(Icons.Default.Add, "Yeni kovan")
             }
         },
