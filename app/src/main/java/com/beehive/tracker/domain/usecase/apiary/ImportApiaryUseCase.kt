@@ -149,6 +149,8 @@ class ImportApiaryUseCase @Inject constructor(
                             transcriptionStatus = TranscriptionStatus.valueOf(
                                 ar.optString("transcriptionStatus", TranscriptionStatus.NONE.name)
                             ),
+                            transcriptionVosk = ar.optString("transcriptionVosk").takeIf { it.isNotEmpty() },
+                            transcriptionWhisper = ar.optString("transcriptionWhisper").takeIf { it.isNotEmpty() },
                             createdAt = ar.getLong("createdAt"),
                         ))
                     }
