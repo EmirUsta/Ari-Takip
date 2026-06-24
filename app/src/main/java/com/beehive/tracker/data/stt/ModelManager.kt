@@ -8,12 +8,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.URL
-import java.util.zip.ZipInputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
-enum class ModelState { NOT_DOWNLOADED, DOWNLOADING, READY, ERROR }
+enum class ModelState { NOT_READY, COPYING, READY, ERROR }
 
 @Singleton
 class ModelManager @Inject constructor(
@@ -21,10 +19,10 @@ class ModelManager @Inject constructor(
 ) {
     private val modelsDir = File(context.filesDir, "stt_models")
 
-    private val _voskState = MutableStateFlow(ModelState.NOT_DOWNLOADED)
+    private val _voskState = MutableStateFlow(ModelState.NOT_READY)
     val voskState: StateFlow<ModelState> = _voskState.asStateFlow()
 
-    private val _whisperState = MutableStateFlow(ModelState.NOT_DOWNLOADED)
+    private val _whisperState = MutableStateFlow(ModelState.NOT_READY)
     val whisperState: StateFlow<ModelState> = _whisperState.asStateFlow()
 
     val voskModelPath: String get() = File(modelsDir, "vosk-model-small-tr-0.3").absolutePath
@@ -44,54 +42,44 @@ class ModelManager @Inject constructor(
             && File(dir, "tiny-tokens.txt").exists()
     }
 
-    suspend fun downloadVosk() = withContext(Dispatchers.IO) {
+    suspend fun ensureVosk() = withContext(Dispatchers.IO) {
         if (_voskState.value == ModelState.READY) return@withContext
-        _voskState.value = ModelState.DOWNLOADING
+        _voskState.value = ModelState.COPYING
         try {
-            val zipFile = File(modelsDir, "vosk-tr.zip")
-            URL("https://alphacephei.com/vosk/models/vosk-model-small-tr-0.3.zip")
-                .openStream().use { input -> zipFile.outputStream().use { input.copyTo(it) } }
-            unzip(zipFile, modelsDir)
-            zipFile.delete()
+            copyAssetDir("stt_models/vosk-model-small-tr-0.3", File(voskModelPath))
             _voskState.value = ModelState.READY
         } catch (e: Exception) {
             _voskState.value = ModelState.ERROR
         }
     }
 
-    suspend fun downloadWhisper() = withContext(Dispatchers.IO) {
+    suspend fun ensureWhisper() = withContext(Dispatchers.IO) {
         if (_whisperState.value == ModelState.READY) return@withContext
-        _whisperState.value = ModelState.DOWNLOADING
+        _whisperState.value = ModelState.COPYING
         try {
             val dir = File(whisperModelDir).also { it.mkdirs() }
-            val base = "https://huggingface.co/csukuangfj/sherpa-onnx-whisper-tiny/resolve/main"
-            listOf(
-                "tiny-encoder.int8.onnx",
-                "tiny-decoder.int8.onnx",
-                "tiny-tokens.txt",
-            ).forEach { name ->
-                URL("$base/$name").openStream()
-                    .use { input -> File(dir, name).outputStream().use { input.copyTo(it) } }
-            }
+            listOf("tiny-encoder.int8.onnx", "tiny-decoder.int8.onnx", "tiny-tokens.txt")
+                .forEach { name ->
+                    context.assets.open("stt_models/sherpa-whisper-tiny/$name")
+                        .use { src -> File(dir, name).outputStream().use { src.copyTo(it) } }
+                }
             _whisperState.value = ModelState.READY
         } catch (e: Exception) {
             _whisperState.value = ModelState.ERROR
         }
     }
 
-    private fun unzip(zip: File, targetDir: File) {
-        ZipInputStream(zip.inputStream()).use { zis ->
-            var entry = zis.nextEntry
-            while (entry != null) {
-                val outFile = File(targetDir, entry.name)
-                if (entry.isDirectory) {
-                    outFile.mkdirs()
-                } else {
-                    outFile.parentFile?.mkdirs()
-                    outFile.outputStream().use { zis.copyTo(it) }
-                }
-                zis.closeEntry()
-                entry = zis.nextEntry
+    private fun copyAssetDir(assetPath: String, targetDir: File) {
+        val list = context.assets.list(assetPath) ?: return
+        if (list.isEmpty()) {
+            targetDir.parentFile?.mkdirs()
+            context.assets.open(assetPath).use { src ->
+                targetDir.outputStream().use { src.copyTo(it) }
+            }
+        } else {
+            targetDir.mkdirs()
+            list.forEach { child ->
+                copyAssetDir("$assetPath/$child", File(targetDir, child))
             }
         }
     }

@@ -49,10 +49,10 @@ class HiveDetailViewModel @Inject constructor(
     val processingIds: StateFlow<Set<String>> = _processingIds.asStateFlow()
 
     val voskModelState: StateFlow<ModelState> = modelManager.voskState
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModelState.NOT_DOWNLOADED)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModelState.NOT_READY)
 
     val whisperModelState: StateFlow<ModelState> = modelManager.whisperState
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModelState.NOT_DOWNLOADED)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ModelState.NOT_READY)
 
     private val player = AudioPlayerController()
 
@@ -68,8 +68,8 @@ class HiveDetailViewModel @Inject constructor(
 
     fun transcribeWithVosk(audioId: String, filePath: String) {
         viewModelScope.launch {
-            if (modelManager.voskState.value == ModelState.NOT_DOWNLOADED) {
-                modelManager.downloadVosk()
+            if (modelManager.voskState.value != ModelState.READY) {
+                modelManager.ensureVosk()
             }
             if (modelManager.voskState.value != ModelState.READY) return@launch
             _processingIds.value = _processingIds.value + audioId
@@ -81,8 +81,8 @@ class HiveDetailViewModel @Inject constructor(
 
     fun transcribeWithWhisper(audioId: String, filePath: String) {
         viewModelScope.launch {
-            if (modelManager.whisperState.value == ModelState.NOT_DOWNLOADED) {
-                modelManager.downloadWhisper()
+            if (modelManager.whisperState.value != ModelState.READY) {
+                modelManager.ensureWhisper()
             }
             if (modelManager.whisperState.value != ModelState.READY) return@launch
             _processingIds.value = _processingIds.value + audioId

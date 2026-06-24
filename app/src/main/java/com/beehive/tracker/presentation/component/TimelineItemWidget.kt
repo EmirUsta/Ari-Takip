@@ -25,8 +25,8 @@ fun TimelineItemWidget(
     audioRecord: AudioRecord? = null,
     isPlaying: Boolean = false,
     isProcessing: Boolean = false,
-    voskModelState: ModelState = ModelState.NOT_DOWNLOADED,
-    whisperModelState: ModelState = ModelState.NOT_DOWNLOADED,
+    voskModelState: ModelState = ModelState.NOT_READY,
+    whisperModelState: ModelState = ModelState.NOT_READY,
     onPlayToggle: () -> Unit = {},
     onTranscribeVosk: () -> Unit = {},
     onTranscribeWhisper: () -> Unit = {},
@@ -98,18 +98,18 @@ fun TimelineItemWidget(
                     Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         SttButton(
                             label = when (voskModelState) {
-                                ModelState.DOWNLOADING -> "Vosk İndiriliyor…"
+                                ModelState.COPYING -> "Vosk Hazırlanıyor…"
                                 else -> "Vosk"
                             },
-                            enabled = voskModelState != ModelState.DOWNLOADING,
+                            enabled = voskModelState != ModelState.COPYING,
                             onClick = onTranscribeVosk,
                         )
                         SttButton(
                             label = when (whisperModelState) {
-                                ModelState.DOWNLOADING -> "Whisper İndiriliyor…"
+                                ModelState.COPYING -> "Whisper Hazırlanıyor…"
                                 else -> "Whisper"
                             },
-                            enabled = whisperModelState != ModelState.DOWNLOADING,
+                            enabled = whisperModelState != ModelState.COPYING,
                             onClick = onTranscribeWhisper,
                         )
                     }
