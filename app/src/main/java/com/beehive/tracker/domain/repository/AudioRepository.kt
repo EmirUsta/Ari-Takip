@@ -11,4 +11,6 @@ interface AudioRepository {
     // STT kuyruğu için durum güncellemesi (NONE → PENDING → DONE/FAILED)
     suspend fun updateStatus(id: String, status: TranscriptionStatus)
     suspend fun getByNoteId(noteId: String): AudioRecord?
+    suspend fun getOlderThan(cutoffMs: Long): List<AudioRecord>
+    suspend fun deleteById(id: String)
 }

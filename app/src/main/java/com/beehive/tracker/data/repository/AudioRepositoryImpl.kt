@@ -24,4 +24,9 @@ class AudioRepositoryImpl @Inject constructor(
 
     override suspend fun getByNoteId(noteId: String): AudioRecord? =
         dao.getByNoteId(noteId)?.toDomain()
+
+    override suspend fun getOlderThan(cutoffMs: Long): List<AudioRecord> =
+        dao.getOlderThan(cutoffMs).map { it.toDomain() }
+
+    override suspend fun deleteById(id: String) = dao.deleteById(id)
 }

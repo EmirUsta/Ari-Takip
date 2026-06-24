@@ -23,4 +23,10 @@ interface AudioRecordDao {
 
     @Query("SELECT * FROM audio_record WHERE noteId = :noteId LIMIT 1")
     suspend fun getByNoteId(noteId: String): AudioRecordEntity?
+
+    @Query("SELECT * FROM audio_record WHERE createdAt < :cutoffMs")
+    suspend fun getOlderThan(cutoffMs: Long): List<AudioRecordEntity>
+
+    @Query("DELETE FROM audio_record WHERE id = :id")
+    suspend fun deleteById(id: String)
 }
