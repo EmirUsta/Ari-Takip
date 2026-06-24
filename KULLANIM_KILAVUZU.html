@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kovan Takip — Kullanım Kılavuzu</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #fdf8f0;
+      color: #2d2d2d;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #b8860b, #daa520);
+      color: white;
+      padding: 32px 20px 24px;
+      text-align: center;
+    }
+    header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    header p  { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+    header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 2px 12px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #e8e0d0;
+      padding: 12px 20px;
+    }
+    nav h2 { font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+    nav a {
+      display: block;
+      color: #b8860b;
+      text-decoration: none;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0e8d8;
+      font-size: 15px;
+    }
+    nav a:last-child { border-bottom: none; }
+
+    main { padding: 0 0 40px; }
+
+    section {
+      margin: 0;
+      padding: 24px 20px;
+      border-bottom: 8px solid #f0e8d8;
+    }
+
+    h2.section-title {
+      font-size: 20px;
+      color: #b8860b;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2.section-title .icon {
+      width: 32px; height: 32px;
+      background: #b8860b;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+
+    h3 {
+      font-size: 16px;
+      color: #5a3e00;
+      margin: 20px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e8d8b0;
+    }
+
+    p { margin-bottom: 10px; }
+
+    .tip {
+      background: #fff8e6;
+      border-left: 4px solid #daa520;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 14px;
+      color: #5a3e00;
+    }
+    .tip strong { color: #b8860b; }
+
+    .warning {
+      background: #fff0f0;
+      border-left: 4px solid #e53935;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 14px;
+      color: #7a1010;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      margin: 8px 0;
+      align-items: flex-start;
+    }
+    .step-num {
+      min-width: 26px; height: 26px;
+      background: #b8860b;
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    th {
+      background: #f5ead0;
+      color: #5a3e00;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #ede0c8;
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    .tag-row { display: flex; align-items: center; gap: 8px; }
+    .dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .mode-card {
+      background: white;
+      border: 1px solid #e8d8b0;
+      border-radius: 10px;
+      padding: 14px;
+      margin: 8px 0;
+    }
+    .mode-card h4 {
+      font-size: 15px;
+      color: #b8860b;
+      margin-bottom: 8px;
+    }
+    .mode-card ul { padding-left: 18px; }
+    .mode-card li { margin: 4px 0; font-size: 14px; }
+
+    .faq-item {
+      background: white;
+      border: 1px solid #e8d8b0;
+      border-radius: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 14px;
+      font-weight: 600;
+      color: #5a3e00;
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .faq-q::after { content: "▾"; font-size: 18px; color: #b8860b; }
+    .faq-a {
+      padding: 0 14px 14px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px 20px;
+      font-size: 13px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🐝 Kovan Takip</h1>
+  <p>Kullanım Kılavuzu</p>
+  <span class="badge">v1.0 — Haziran 2026</span>
+</header>
+
+<nav>
+  <h2>İçindekiler</h2>
+  <a href="#ilk-acilis">1. İlk Açılış</a>
+  <a href="#arılik">2. Arılık Yönetimi</a>
+  <a href="#harita">3. Harita Ekranı</a>
+  <a href="#kovan">4. Kovan Ekleme ve Taşıma</a>
+  <a href="#etiket">5. Etiket Yönetimi</a>
+  <a href="#not">6. Not ve Ses Kaydı</a>
+  <a href="#izgara">7. Izgara Ayarları</a>
+  <a href="#aktarma">8. Dışa / İçe Aktarma</a>
+  <a href="#sss">9. Sık Sorulan Sorular</a>
+</nav>
+
+<main>
+
+  <!-- 1. İlk Açılış -->
+  <section id="ilk-acilis">
+    <h2 class="section-title">
+      <span class="icon">🚀</span> İlk Açılış
+    </h2>
+    <p>Uygulama ilk açıldığında birkaç hazır etiket otomatik oluşturulur:</p>
+    <table>
+      <tr><th>Renk</th><th>Etiket</th></tr>
+      <tr><td><div class="tag-row"><div class="dot" style="background:#e53935"></div> Kırmızı</div></td><td>Ana Arı Yok</td></tr>
+      <tr><td><div class="tag-row"><div class="dot" style="background:#43a047"></div> Yeşil</div></td><td>Normal</td></tr>
+      <tr><td><div class="tag-row"><div class="dot" style="background:#fdd835"></div> Sarı</div></td><td>Kontrol Edilecek</td></tr>
+      <tr><td><div class="tag-row"><div class="dot" style="background:#1e88e5"></div> Mavi</div></td><td>Şurup Verilecek</td></tr>
+    </table>
+    <div class="tip">Bu etiketleri Ayarlar ekranından istediğiniz gibi değiştirebilirsiniz.</div>
+    <p>Uygulama tamamen <strong>çevrimdışı</strong> çalışır — internet bağlantısı gerekmez, verileriniz yalnızca telefonunuzda saklanır.</p>
+  </section>
+
+  <!-- 2. Arılık -->
+  <section id="arılik">
+    <h2 class="section-title">
+      <span class="icon">🏡</span> Arılık Yönetimi
+    </h2>
+
+    <h3>Yeni Arılık Ekleme</h3>
+    <div class="step"><div class="step-num">1</div><div>Ana ekranda sağ alttaki <strong>+</strong> butonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>Arılık adını girin (örn. "Dağ Arılığı")</div></div>
+    <div class="step"><div class="step-num">3</div><div><strong>Ekle</strong>'ye basın</div></div>
+    <div class="tip"><strong>İpucu:</strong> Birden fazla arılığınız varsa hepsini ayrı ayrı oluşturun. Her arılığın kendi haritası vardır.</div>
+
+    <h3>Arılığa Giriş</h3>
+    <p>Listeden arılığın adına dokunun → harita ekranı açılır.</p>
+
+    <h3>Arılık Menüsü (⋮)</h3>
+    <p>Her arılığın sağındaki <strong>⋮</strong> ikonuna basın:</p>
+    <table>
+      <tr><th>Seçenek</th><th>Ne Yapar</th></tr>
+      <tr><td><strong>Dışa Aktar</strong></td><td>Tüm kovan, not ve sesleri ZIP dosyasına kaydeder</td></tr>
+      <tr><td><strong>Sil</strong></td><td>Arılığı ve tüm verilerini kalıcı siler</td></tr>
+    </table>
+  </section>
+
+  <!-- 3. Harita -->
+  <section id="harita">
+    <h2 class="section-title">
+      <span class="icon">🗺️</span> Harita Ekranı
+    </h2>
+
+    <h3>İki Mod</h3>
+    <div class="mode-card">
+      <h4>✏️ Düzenleme Modu</h4>
+      <ul>
+        <li>Kovanları sürükleyip taşıyabilirsiniz</li>
+        <li>Uzun basarak yeni kovan ekleyebilirsiniz</li>
+        <li>Izgara belirgin görünür (canlı amber renk)</li>
+        <li>Harita kaydırma / zoom kilitlidir</li>
+      </ul>
+    </div>
+    <div class="mode-card">
+      <h4>🔒 Görüntüleme Modu</h4>
+      <ul>
+        <li>Haritayı kaydırabilir ve yakınlaştırabilirsiniz</li>
+        <li>Kovanlara dokunarak detaya girebilirsiniz</li>
+        <li>Izgara soluk görünür</li>
+        <li>Kovanlar sürüklenmez</li>
+      </ul>
+    </div>
+
+    <p>Sağ üstteki <strong>kalem / kilit</strong> ikonuna basarak modlar arasında geçiş yapın.</p>
+
+    <h3>Haritada Gezinme (Görüntüleme Modunda)</h3>
+    <table>
+      <tr><th>Hareket</th><th>Nasıl</th></tr>
+      <tr><td>Kaydır</td><td>Tek parmakla sürükle</td></tr>
+      <tr><td>Yakınlaştır</td><td>İki parmakla açma hareketi</td></tr>
+      <tr><td>Uzaklaştır</td><td>İki parmakla kapama hareketi</td></tr>
+    </table>
+
+    <h3>Üst Bilgi Rozetleri</h3>
+    <table>
+      <tr><th>Rozet</th><th>Anlamı</th></tr>
+      <tr><td><strong>4×6</strong></td><td>Izgara boyutu: 4 sütun × 6 satır</td></tr>
+      <tr><td><strong>12 kovan</strong></td><td>Haritadaki toplam kovan sayısı</td></tr>
+    </table>
+  </section>
+
+  <!-- 4. Kovan -->
+  <section id="kovan">
+    <h2 class="section-title">
+      <span class="icon">📦</span> Kovan Ekleme ve Taşıma
+    </h2>
+
+    <h3>Kovan Ekle — + Butonu</h3>
+    <div class="step"><div class="step-num">1</div><div>Sağ alttaki <strong>+</strong> butonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>Kovan adını girin</div></div>
+    <div class="step"><div class="step-num">3</div><div><strong>Ekle</strong>'ye basın — kovan ilk boş slota yerleşir</div></div>
+
+    <h3>Kovan Ekle — Uzun Bas</h3>
+    <div class="step"><div class="step-num">1</div><div><strong>Düzenleme moduna</strong> geçin</div></div>
+    <div class="step"><div class="step-num">2</div><div>İstediğiniz slota <strong>uzun basın</strong></div></div>
+    <div class="step"><div class="step-num">3</div><div>Kovan adını girip <strong>Ekle</strong>'ye basın</div></div>
+
+    <h3>Kovanı Taşıma</h3>
+    <div class="step"><div class="step-num">1</div><div><strong>Düzenleme moduna</strong> geçin</div></div>
+    <div class="step"><div class="step-num">2</div><div>Kovana basılı tutup <strong>sürükleyin</strong></div></div>
+    <div class="step"><div class="step-num">3</div><div>Parmağınızı bırakınca kovan en yakın slota <strong>otomatik yapışır</strong></div></div>
+    <div class="tip"><strong>Not:</strong> Her slot yalnızca bir kovan alır. Kovan ızgara dışına çıkamaz.</div>
+
+    <h3>Tüm Kovanları Otomatik Hizala</h3>
+    <p>TopBar'daki <strong>⊞ grid ikonuna</strong> basın. Kovanlar soldan sağa, yukarıdan aşağıya sıralanır.</p>
+    <div class="tip"><strong>İpucu:</strong> Izgara boyutunu değiştirdikten sonra bu butona basın.</div>
+
+    <h3>Kovan Silme</h3>
+    <div class="step"><div class="step-num">1</div><div><strong>Düzenleme modunda</strong> kovana <strong>uzun basın</strong></div></div>
+    <div class="step"><div class="step-num">2</div><div>Açılan menüden <strong>Kovani Sil</strong>'e dokunun</div></div>
+    <div class="warning">⚠️ Kovan silinince o kovana ait tüm notlar ve ses kayıtları da kalıcı olarak silinir.</div>
+
+    <h3>Kovan Detayına Gitme</h3>
+    <p>Herhangi bir modda kovana <strong>tek dokunuş</strong> yapın → zaman çizelgesi açılır.</p>
+  </section>
+
+  <!-- 5. Etiket -->
+  <section id="etiket">
+    <h2 class="section-title">
+      <span class="icon">🏷️</span> Etiket Yönetimi
+    </h2>
+    <p>Harita ekranında <strong>⚙️</strong> ikonuna basın → Ayarlar ekranı açılır.</p>
+
+    <h3>Yeni Etiket Ekleme</h3>
+    <div class="step"><div class="step-num">1</div><div>Sağ alttaki <strong>+</strong> butonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>Etiket adını girin (örn. "Bal Hasadı Yapıldı")</div></div>
+    <div class="step"><div class="step-num">3</div><div>15 hazır renkten birini seçin</div></div>
+    <div class="step"><div class="step-num">4</div><div><strong>Ekle</strong>'ye basın</div></div>
+
+    <h3>Etiket Silme</h3>
+    <p>Etiketin sağındaki <strong>🗑 çöp kutusu</strong> ikonuna basın.</p>
+
+    <h3>Etiketi Kovana Uygulama</h3>
+    <p>Etiket doğrudan kovana atanmaz. Not ekleme sırasında etiket seçilir ve <strong>"Kovan rengini güncelle"</strong> açıksa kovan haritada o rengi alır.</p>
+  </section>
+
+  <!-- 6. Not -->
+  <section id="not">
+    <h2 class="section-title">
+      <span class="icon">📝</span> Not ve Ses Kaydı
+    </h2>
+    <p>Kovana dokunarak <strong>Kovan Detay</strong> ekranını açın. Geçmiş notlar zaman çizelgesi olarak görünür.</p>
+
+    <h3>Yeni Not Ekleme</h3>
+    <div class="step"><div class="step-num">1</div><div>Sağ alttaki <strong>+</strong> butonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>İsteğe bağlı: metin alanına yazılı not girin</div></div>
+    <div class="step"><div class="step-num">3</div><div>İsteğe bağlı: listeden bir <strong>etiket seçin</strong></div></div>
+    <div class="step"><div class="step-num">4</div><div>"<strong>Kovan rengini güncelle</strong>" toggle'ını açarsanız haritadaki kovan rengi değişir</div></div>
+    <div class="step"><div class="step-num">5</div><div><strong>Kaydet</strong>'e basın</div></div>
+
+    <h3>Sesli Not Ekleme</h3>
+    <div class="step"><div class="step-num">1</div><div>Not editöründe <strong>mikrofon</strong> ikonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>Mikrofon izni istenirse <strong>İzin Ver</strong>'e basın</div></div>
+    <div class="step"><div class="step-num">3</div><div>Kayıt başlar — geçen süre ekranda görünür</div></div>
+    <div class="step"><div class="step-num">4</div><div><strong>Durdur</strong> butonuna basın</div></div>
+    <div class="step"><div class="step-num">5</div><div>Kayıtı dinlemek için ▶ butonuna basın; beğenmediyseniz silin ve yeniden kaydedin</div></div>
+    <div class="step"><div class="step-num">6</div><div><strong>Kaydet</strong>'e basın — ses de nota eklenir</div></div>
+
+    <h3>Ses Kaydını Dinleme</h3>
+    <p>Zaman çizelgesinde ses içeren notlarda <strong>▶ oynat</strong> butonuna basın. Başka bir ses çalıyorsa otomatik durur.</p>
+  </section>
+
+  <!-- 7. Izgara -->
+  <section id="izgara">
+    <h2 class="section-title">
+      <span class="icon">⊞</span> Izgara Ayarları
+    </h2>
+    <p>Harita → <strong>⚙️ Ayarlar</strong> → ekranın üstünde <em>Izgara Boyutu</em> bölümü.</p>
+
+    <table>
+      <tr><th>Ayar</th><th>Açıklama</th><th>Aralık</th></tr>
+      <tr><td><strong>Sütun (A)</strong></td><td>Yatayda kaç kovan sığar</td><td>2 – 20</td></tr>
+      <tr><td><strong>Satır (B)</strong></td><td>Dikeyde kaç kovan sığar</td><td>2 – 50</td></tr>
+      <tr><td><strong>Boşluk</strong></td><td>Kovanlar arası mesafe</td><td>0 – 20 dp</td></tr>
+    </table>
+
+    <p><strong>−</strong> ve <strong>+</strong> butonlarıyla değeri ayarlayın. Değişiklikler anında kaydedilir.</p>
+
+    <div class="tip">
+      <strong>Önemli:</strong> Izgara boyutunu değiştirdikten sonra harita ekranına dönüp <strong>⊞ Izgara Düzenle</strong> butonuna basın. Kovanlar yeni ızgaraya göre yeniden sıralanır.
+    </div>
+
+    <h3>Örnek Kullanımlar</h3>
+    <table>
+      <tr><th>Arılık Düzeni</th><th>Sütun (A)</th><th>Satır (B)</th></tr>
+      <tr><td>3 sıra × 10 kovan</td><td>10</td><td>3</td></tr>
+      <tr><td>5×5 kare düzen</td><td>5</td><td>5</td></tr>
+      <tr><td>Tek sıra 8 kovan</td><td>8</td><td>1</td></tr>
+    </table>
+  </section>
+
+  <!-- 8. Aktarma -->
+  <section id="aktarma">
+    <h2 class="section-title">
+      <span class="icon">📤</span> Dışa / İçe Aktarma
+    </h2>
+
+    <h3>Arılığı Dışa Aktar (Yedekle)</h3>
+    <div class="step"><div class="step-num">1</div><div>Ana ekranda arılığın <strong>⋮</strong> menüsüne basın</div></div>
+    <div class="step"><div class="step-num">2</div><div><strong>Dışa Aktar</strong>'a dokunun</div></div>
+    <div class="step"><div class="step-num">3</div><div>Dosyayı kaydetmek istediğiniz yeri seçin (Drive, İndirilenler, vb.)</div></div>
+    <div class="step"><div class="step-num">4</div><div><strong>.zip</strong> dosyası oluşturulur — içinde tüm kovan, not ve ses verileri bulunur</div></div>
+
+    <h3>Arılığı İçe Aktar (Geri Yükle)</h3>
+    <div class="step"><div class="step-num">1</div><div>Ana ekranda sağ üstteki <strong>↑ yükleme</strong> ikonuna basın</div></div>
+    <div class="step"><div class="step-num">2</div><div>ZIP dosyasını seçin</div></div>
+    <div class="step"><div class="step-num">3</div><div>Arılık listeye otomatik eklenir</div></div>
+
+    <h3>Başka Telefona Aktarım</h3>
+    <div class="step"><div class="step-num">1</div><div>Eski telefonda <strong>Dışa Aktar</strong> ile ZIP oluşturun</div></div>
+    <div class="step"><div class="step-num">2</div><div>ZIP'i yeni telefona gönderin (Drive, WhatsApp, Bluetooth, vb.)</div></div>
+    <div class="step"><div class="step-num">3</div><div>Yeni telefonda uygulamayı kurun</div></div>
+    <div class="step"><div class="step-num">4</div><div><strong>↑ İçe Aktar</strong> ile ZIP'i yükleyin</div></div>
+  </section>
+
+  <!-- 9. SSS -->
+  <section id="sss">
+    <h2 class="section-title">
+      <span class="icon">❓</span> Sık Sorulan Sorular
+    </h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Kovanımı yanlış yere koydum, nasıl taşırım?</div>
+      <div class="faq-a">Haritada kalem ikonuna basarak düzenleme moduna geçin, kovana basılı tutup sürükleyin, istediğiniz slota bırakın.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Bir kovana birden fazla etiket uygulayabilir miyim?</div>
+      <div class="faq-a">Kovan tek seferde bir renk taşır. Her yeni notta farklı etiket seçip "Kovan rengini güncelle"yi açarak rengi değiştirebilirsiniz. Geçmiş notlar eski etiketlerini korur.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Izgara dışında kalan kovanlarım kayboldu mu?</div>
+      <div class="faq-a">Hayır, yalnızca görünmüyor olabilirler. Harita ekranında ⊞ "Izgara Düzenle" butonuna basın; tüm kovanlar yeni ızgara içine sıralanır.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Ses kaydı ne kadar süre olabilir?</div>
+      <div class="faq-a">Uygulama tarafında bir sınır yoktur. Telefon depolama alanı elverdiği sürece kayıt yapabilirsiniz.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Verilerimi başka bir telefona nasıl taşırım?</div>
+      <div class="faq-a">⋮ menüsünden "Dışa Aktar" ile ZIP oluşturun, yeni telefona gönderin (Drive, WhatsApp, vb.), yeni telefonda uygulamayı kurun ve "↑ İçe Aktar" ile yükleyin.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">İnternet bağlantısı gerekiyor mu?</div>
+      <div class="faq-a">Hayır. Uygulama tamamen çevrimdışı çalışır, hiçbir veri dışarıya gönderilmez.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Uygulama kapanınca verilerim kaybolur mu?</div>
+      <div class="faq-a">Hayır. Tüm veriler telefondaki yerel veritabanına kaydedilir ve kalıcıdır. Uygulama silinmediği sürece kaybolmaz.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  🐝 Kovan Takip v1.0 &nbsp;·&nbsp; Haziran 2026
+</footer>
+
+<script>
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const a = q.nextElementSibling;
+      const isOpen = a.style.display === 'block';
+      a.style.display = isOpen ? 'none' : 'block';
+      q.style.color = isOpen ? '#5a3e00' : '#b8860b';
+    });
+  });
+  document.querySelectorAll('.faq-a').forEach(a => a.style.display = 'none');
+</script>
+
+</body>
+</html>
