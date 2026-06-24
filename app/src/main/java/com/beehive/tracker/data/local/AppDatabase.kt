@@ -15,8 +15,6 @@ import com.beehive.tracker.data.local.entity.HiveEntity
 import com.beehive.tracker.data.local.entity.NoteEntity
 import com.beehive.tracker.data.local.entity.TagEntity
 
-// Faz 3: version 1→2, NoteEntity tablosu eklendi.
-// Faz 5: version 2→3, AudioRecordEntity tablosu eklendi.
 @Database(
     entities = [
         ApiaryEntity::class,
@@ -25,7 +23,7 @@ import com.beehive.tracker.data.local.entity.TagEntity
         NoteEntity::class,
         AudioRecordEntity::class,
     ],
-    version = 3,
+    version = 4,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -75,5 +73,12 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
             """.trimIndent()
         )
         database.execSQL("CREATE INDEX IF NOT EXISTS index_audio_record_noteId ON audio_record(noteId)")
+    }
+}
+
+val MIGRATION_3_4 = object : Migration(3, 4) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE audio_record ADD COLUMN transcriptionVosk TEXT")
+        database.execSQL("ALTER TABLE audio_record ADD COLUMN transcriptionWhisper TEXT")
     }
 }

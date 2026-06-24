@@ -19,6 +19,8 @@ class SaveAudioRecordUseCase @Inject constructor(
                 durationSeconds = durationSeconds,
                 transcription = null,
                 transcriptionStatus = TranscriptionStatus.NONE,
+                transcriptionVosk = null,
+                transcriptionWhisper = null,
                 createdAt = System.currentTimeMillis(),
             )
         )

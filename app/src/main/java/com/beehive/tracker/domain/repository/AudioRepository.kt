@@ -13,4 +13,6 @@ interface AudioRepository {
     suspend fun getByNoteId(noteId: String): AudioRecord?
     suspend fun getOlderThan(cutoffMs: Long): List<AudioRecord>
     suspend fun deleteById(id: String)
+    suspend fun updateVosk(id: String, text: String?)
+    suspend fun updateWhisper(id: String, text: String?)
 }

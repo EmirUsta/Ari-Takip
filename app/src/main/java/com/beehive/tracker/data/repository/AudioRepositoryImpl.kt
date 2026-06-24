@@ -29,4 +29,6 @@ class AudioRepositoryImpl @Inject constructor(
         dao.getOlderThan(cutoffMs).map { it.toDomain() }
 
     override suspend fun deleteById(id: String) = dao.deleteById(id)
+    override suspend fun updateVosk(id: String, text: String?) = dao.updateVosk(id, text)
+    override suspend fun updateWhisper(id: String, text: String?) = dao.updateWhisper(id, text)
 }

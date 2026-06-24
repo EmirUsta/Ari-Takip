@@ -27,6 +27,9 @@ fun HiveDetailScreen(
     val hive by viewModel.hive.collectAsStateWithLifecycle()
     val notes by viewModel.notes.collectAsStateWithLifecycle()
     val playingNoteId by viewModel.playingNoteId.collectAsStateWithLifecycle()
+    val processingIds by viewModel.processingIds.collectAsStateWithLifecycle()
+    val voskModelState by viewModel.voskModelState.collectAsStateWithLifecycle()
+    val whisperModelState by viewModel.whisperModelState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -47,9 +50,7 @@ fun HiveDetailScreen(
     ) { padding ->
         if (notes.isEmpty()) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -60,23 +61,29 @@ fun HiveDetailScreen(
             }
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                modifier = Modifier.fillMaxSize().padding(padding),
                 contentPadding = PaddingValues(vertical = 12.dp),
             ) {
                 items(notes, key = { it.note.id }) { noteWithAudio ->
+                    val audio = noteWithAudio.audioRecord
                     TimelineItemWidget(
                         createdAt = noteWithAudio.note.createdAt,
                         tagColorHex = noteWithAudio.note.tagColorHex,
                         tagLabel = noteWithAudio.note.tagLabel,
                         textContent = noteWithAudio.note.textContent,
-                        audioRecord = noteWithAudio.audioRecord,
+                        audioRecord = audio,
                         isPlaying = playingNoteId == noteWithAudio.note.id,
+                        isProcessing = audio != null && processingIds.contains(audio.id),
+                        voskModelState = voskModelState,
+                        whisperModelState = whisperModelState,
                         onPlayToggle = {
-                            noteWithAudio.audioRecord?.let { audio ->
-                                viewModel.togglePlayback(noteWithAudio.note.id, audio.filePath)
-                            }
+                            audio?.let { viewModel.togglePlayback(noteWithAudio.note.id, it.filePath) }
+                        },
+                        onTranscribeVosk = {
+                            audio?.let { viewModel.transcribeWithVosk(it.id, it.filePath) }
+                        },
+                        onTranscribeWhisper = {
+                            audio?.let { viewModel.transcribeWithWhisper(it.id, it.filePath) }
                         },
                     )
                 }

@@ -3,23 +3,19 @@ package com.beehive.tracker.presentation.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.beehive.tracker.data.stt.ModelState
 import com.beehive.tracker.domain.model.AudioRecord
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-// Zaman çizelgesindeki tek not kartı.
-// Sol tarafta dikey çizgi + daire ile GitHub activity görünümü taklit edilir.
-// tagColorHex/tagLabel not yazılırken denormalize kaydedildiğinden
-// etiket sonradan silinse bile burada doğru renk ve isim görünür.
-// audioRecord null değilse ses oynatıcı widget gösterilir.
 @Composable
 fun TimelineItemWidget(
     createdAt: Long,
@@ -28,33 +24,37 @@ fun TimelineItemWidget(
     textContent: String?,
     audioRecord: AudioRecord? = null,
     isPlaying: Boolean = false,
+    isProcessing: Boolean = false,
+    voskModelState: ModelState = ModelState.NOT_DOWNLOADED,
+    whisperModelState: ModelState = ModelState.NOT_DOWNLOADED,
     onPlayToggle: () -> Unit = {},
+    onTranscribeVosk: () -> Unit = {},
+    onTranscribeWhisper: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val dateStr = SimpleDateFormat("dd MMM yyyy  HH:mm", Locale("tr")).format(Date(createdAt))
     val dotColor = tagColorHex?.let { parseColor(it) } ?: Color(0xFFBDBDBD)
+
+    val hasAudio = audioRecord != null
+    val hasTranscription = hasAudio &&
+        (!audioRecord!!.transcriptionVosk.isNullOrBlank() || !audioRecord.transcriptionWhisper.isNullOrBlank())
+    val lineHeight = when {
+        hasTranscription -> 120.dp
+        hasAudio -> 72.dp
+        else -> 48.dp
+    }
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 4.dp),
     ) {
-        // Zaman çizelgesi sol sütunu: dikey çizgi + renkli nokta
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(24.dp),
         ) {
-            Box(
-                modifier = Modifier
-                    .size(14.dp)
-                    .background(dotColor, CircleShape)
-            )
-            Box(
-                modifier = Modifier
-                    .width(2.dp)
-                    .height(if (audioRecord != null) 72.dp else 48.dp)
-                    .background(Color(0xFFE0E0E0))
-            )
+            Box(modifier = Modifier.size(14.dp).background(dotColor, CircleShape))
+            Box(modifier = Modifier.width(2.dp).height(lineHeight).background(Color(0xFFE0E0E0)))
         }
 
         Spacer(modifier = Modifier.width(12.dp))
@@ -73,10 +73,7 @@ fun TimelineItemWidget(
 
             if (!textContent.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = textContent,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Text(text = textContent, style = MaterialTheme.typography.bodyMedium)
             }
 
             if (audioRecord != null) {
@@ -87,7 +84,77 @@ fun TimelineItemWidget(
                     onPlayToggle = onPlayToggle,
                     modifier = Modifier.fillMaxWidth(),
                 )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                if (isProcessing) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(modifier = Modifier.size(14.dp), strokeWidth = 2.dp)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("İşleniyor…", style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                    }
+                } else {
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        SttButton(
+                            label = when (voskModelState) {
+                                ModelState.DOWNLOADING -> "Vosk İndiriliyor…"
+                                else -> "Vosk"
+                            },
+                            enabled = voskModelState != ModelState.DOWNLOADING,
+                            onClick = onTranscribeVosk,
+                        )
+                        SttButton(
+                            label = when (whisperModelState) {
+                                ModelState.DOWNLOADING -> "Whisper İndiriliyor…"
+                                else -> "Whisper"
+                            },
+                            enabled = whisperModelState != ModelState.DOWNLOADING,
+                            onClick = onTranscribeWhisper,
+                        )
+                    }
+                }
+
+                if (!audioRecord.transcriptionWhisper.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    TranscriptCard(label = "Whisper", text = audioRecord.transcriptionWhisper)
+                }
+                if (!audioRecord.transcriptionVosk.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(4.dp))
+                    TranscriptCard(label = "Vosk", text = audioRecord.transcriptionVosk)
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun SttButton(label: String, enabled: Boolean, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        enabled = enabled,
+        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Text(label, style = MaterialTheme.typography.labelSmall)
+    }
+}
+
+@Composable
+private fun TranscriptCard(label: String, text: String) {
+    Surface(
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = RoundedCornerShape(8.dp),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(text = text, style = MaterialTheme.typography.bodySmall)
         }
     }
 }

@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 import com.beehive.tracker.domain.model.AudioRecord
 import com.beehive.tracker.domain.model.TranscriptionStatus
 
-// Ses kaydı Room tablosu. Note silinince CASCADE ile birlikte silinir.
-// transcriptionStatus String olarak saklanır; enum.name ↔ enum.valueOf dönüşümü toDomain/toEntity'de.
 @Entity(
     tableName = "audio_record",
     foreignKeys = [
@@ -28,6 +26,8 @@ data class AudioRecordEntity(
     val durationSeconds: Int,
     val transcription: String?,
     val transcriptionStatus: String,
+    val transcriptionVosk: String?,
+    val transcriptionWhisper: String?,
     val createdAt: Long,
 )
 
@@ -38,6 +38,8 @@ fun AudioRecordEntity.toDomain() = AudioRecord(
     durationSeconds = durationSeconds,
     transcription = transcription,
     transcriptionStatus = TranscriptionStatus.valueOf(transcriptionStatus),
+    transcriptionVosk = transcriptionVosk,
+    transcriptionWhisper = transcriptionWhisper,
     createdAt = createdAt,
 )
 
@@ -48,5 +50,7 @@ fun AudioRecord.toEntity() = AudioRecordEntity(
     durationSeconds = durationSeconds,
     transcription = transcription,
     transcriptionStatus = transcriptionStatus.name,
+    transcriptionVosk = transcriptionVosk,
+    transcriptionWhisper = transcriptionWhisper,
     createdAt = createdAt,
 )

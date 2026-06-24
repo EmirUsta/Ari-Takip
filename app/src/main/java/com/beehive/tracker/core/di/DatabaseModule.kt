@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.beehive.tracker.data.local.AppDatabase
 import com.beehive.tracker.data.local.MIGRATION_1_2
 import com.beehive.tracker.data.local.MIGRATION_2_3
+import com.beehive.tracker.data.local.MIGRATION_3_4
 import com.beehive.tracker.data.local.dao.ApiaryDao
 import com.beehive.tracker.data.local.dao.AudioRecordDao
 import com.beehive.tracker.data.local.dao.HiveDao
@@ -27,7 +28,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): AppDatabase =
         Room.databaseBuilder(context, AppDatabase::class.java, "kovan_takip.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
             .build()
 
     @Provides fun provideApiaryDao(db: AppDatabase): ApiaryDao = db.apiaryDao()

@@ -29,4 +29,10 @@ interface AudioRecordDao {
 
     @Query("DELETE FROM audio_record WHERE id = :id")
     suspend fun deleteById(id: String)
+
+    @Query("UPDATE audio_record SET transcriptionVosk = :text WHERE id = :id")
+    suspend fun updateVosk(id: String, text: String?)
+
+    @Query("UPDATE audio_record SET transcriptionWhisper = :text WHERE id = :id")
+    suspend fun updateWhisper(id: String, text: String?)
 }
