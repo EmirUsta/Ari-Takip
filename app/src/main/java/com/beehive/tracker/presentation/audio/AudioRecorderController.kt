@@ -27,9 +27,11 @@ class AudioRecorderController(private val context: Context) {
             else
                 MediaRecorder()
         ).apply {
-            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setAudioSamplingRate(16000)
+            setAudioEncodingBitRate(256_000)
             setOutputFile(currentPath)
             prepare()
             start()
